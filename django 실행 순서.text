@@ -1,0 +1,31 @@
+1. 서버에 접속 (localhost:8000)
+
+2. mysite폴더에  urls.py 실행
+
+3. urls.py안에 urlpatterns를 보게 됨
+
+4.urlpatterns에 정의된 elections 폴더에 urls파일 실행
+
+5. elections 폴더에 urls파일에 정의 된 views파일의 index메소드 실행
+
+
+
+*장고의 mvc!!!
+
+views.py 는 컨트롤러
+
+models.py 는 데이터 (model)
+
+templates폴더 는 화면 (view)
+
+
+
+* 파이썬 모델 만들고 테이블 적용 시키기
+
+1. models.py에 테이블 생성
+
+2. 아래 순서대로 powershell에 실행
+
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
