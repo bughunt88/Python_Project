@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 #models에 정의된 Candidate를 import
 from .models import Candidate, Poll, Choice
-
+from django.db.models import Sum
 import datetime
 
 #----------------------------------------------
@@ -45,7 +45,37 @@ def polls(request, poll_id):
 
 #----------------------------------------------
 def results(request, area):
-    choice = Choice.objects.all()
-    context = {'choice' : choice}
+    candidates = Candidate.objects.filter(area = area)
+    polls = Poll.objects.filter(area = area)
+    poll_results = []
+    for poll in polls:
+        result = {}
+        result['start_date'] = poll.start_date
+        result['end_date'] = poll.end_date
 
-    return render(request, "elections/result.html", context)
+        # poll.id에 해당하는 전체 투표수
+        total_votes = Choice.objects.filter(poll_id = poll.id).aggregate(Sum('votes'))
+        result['total_votes'] = total_votes['votes__sum']
+
+        rates = [] #지지율
+        for candidate in candidates:
+            # choice가 하나도 없는 경우 - 예외처리로 0을 append
+            try:
+                choice = Choice.objects.get(poll = poll, candidate = candidate)
+                rates.append(
+                    round(choice.votes * 100 / result['total_votes'], 1)
+                    )
+            except :
+                rates.append(0)
+        result['rates'] = rates
+        poll_results.append(result)
+
+    context = {'candidates':candidates, 'area':area,
+    'poll_results' : poll_results}
+    return render(request, 'elections/result.html', context)
+
+    #----------------------------------------------
+
+def candidates(request, name):
+    candidate = Candidate.objects.get(name = name)
+    return HttpResponse(candidate.name)

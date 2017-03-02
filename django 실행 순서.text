@@ -1,3 +1,5 @@
+*장고 실행 순서
+
 1. 서버에 접속 (localhost:8000)
 
 2. mysite폴더에  urls.py 실행

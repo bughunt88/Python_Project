@@ -1,33 +1,33 @@
-<!-- C:\Code\mysite\elections\templates\elections\result.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>지역구 여론조사 결과</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% extends "elections/layout.html" %}
+
+{% block title %}
+{{area}} 여론 조사 결과
+{% endblock %}
+
+{% block content %}
+
 <div class="container">
-<h1>지역구</h1>
+<h1>{{area}}</h1>
 <br>
 <table class="table table-striped">
     <thead>
     <tr>
         <td><B>기간</B></td>
-        <td><B>후보1</B></td>
-        <td><B>후보2</B></td>
+        {% for candidate in candidates %}
+        <td><B>{{candidate.name}}</B></td>
+        {% endfor %}
     </tr>
     </thead>
     <tbody>
+    {% for result in poll_results %}
     <tr>
-        <td> 기간1 </td>
-        <td> 후보1 지지율</td>
-        <td> 후보2 지지율</td>
+        <td> {{result.start_date.year}}/{{result.start_date.month}}/{{result.start_date.day}}~{{result.end_date.year}}/{{result.end_date.month}}/{{result.end_date.day}} </td>
+        {% for rate in result.rates %}
+        <td> {{rate}}%</td>
+        {% endfor %}
     </tr>
     <tbody>
+    {% endfor %}
 </table>
 </div>
-</body>
+{% endblock %}
